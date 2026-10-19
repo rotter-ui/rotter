@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROTTER: Nobody can hold for 10 minutes</title>
+<meta name="description" content="People want a 100x. Nobody can hold for 10 minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #2A0F5B;
+    --ink: #14103A;
+    --pink: #FF8FC7;
+    --pink-dark: #D4558F;
+    --yellow: #FFE14A;
+    --cyan: #5EE6FF;
+    --rot: #9BE564;
+    --soft: rgba(255,255,255,0.78);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: #fff;
+    background-color: var(--bg);
+    /* faint spirals tiled across the whole page */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cpath d='M45 41a4 4 0 0 1 8 0a8 8 0 0 1 -16 0a12 12 0 0 1 24 0a16 16 0 0 1 -32 0' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='2'/%3E%3C/svg%3E");
+    font-family: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 22px 0 0; font-weight: 800; font-size: 20px; letter-spacing: -0.01em; }
+
+  /* HERO */
+  .hero { padding: 40px 0 44px; display: grid; gap: 28px; grid-template-columns: 1.2fr 1fr; align-items: center; }
+  h1 {
+    font-size: clamp(44px, 9vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    margin: 0 0 20px;
+  }
+  .lede { font-size: 20px; max-width: 36ch; margin: 0; color: var(--soft); }
+  .mascot { display: grid; place-items: center; }
+  .mascot svg, .mascot img { width: 100%; max-width: 380px; height: auto; display: block; }
+
+  /* TICKER */
+  .ticker { background: var(--pink); color: var(--ink); border-block: 4px solid var(--ink); overflow: hidden; white-space: nowrap; }
+  .ticker-track { display: inline-block; padding: 12px 0; font-weight: 800; font-size: 20px; animation: scroll 28s linear infinite; }
+  .ticker-track span { margin: 0 22px; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* HOLD TIMER */
+  .timer {
+    background: var(--yellow);
+    color: var(--ink);
+    border: 4px solid var(--ink);
+    border-radius: 20px;
+    padding: 32px;
+    margin: 48px 0;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .timer h2 { margin: 0 0 4px; font-size: 26px; letter-spacing: -0.02em; }
+  .timer p { margin: 0 0 20px; }
+  .clock { font-size: clamp(56px, 14vw, 120px); font-weight: 800; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .verdict { min-height: 1.6em; margin: 12px 0 20px; font-size: 20px; font-weight: 700; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; }
+  button {
+    font: inherit; font-weight: 700; cursor: pointer;
+    border: 3px solid var(--ink); border-radius: 12px; padding: 12px 22px;
+    background: var(--cyan); color: var(--ink);
+  }
+  button.sell { background: var(--pink); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button:focus-visible, a:focus-visible { outline: 4px solid var(--cyan); outline-offset: 3px; }
+  .best { margin-top: 16px; font-size: 15px; }
+
+  /* LINKS + CA */
+  h3 { font-size: 24px; letter-spacing: -0.02em; margin: 0 0 14px; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+  .links a {
+    text-decoration: none; color: var(--ink); font-weight: 700;
+    border: 3px solid var(--ink); border-radius: 12px; padding: 12px 22px; background: #fff;
+  }
+  .links a:hover { background: var(--yellow); }
+  .ca { border: 3px dashed var(--pink); border-radius: 16px; padding: 20px; margin-bottom: 48px; background: rgba(20,16,58,0.7); }
+  .ca code { display: block; font-size: 15px; word-break: break-all; margin: 8px 0 12px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .ca small { color: var(--soft); }
+
+  footer { border-top: 3px solid rgba(255,255,255,0.25); padding: 24px 0 48px; font-size: 14px; color: var(--soft); }
+
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; padding-top: 28px; }
+    .mascot svg, .mascot img { max-width: 300px; }
+    .timer { padding: 24px; box-shadow: 5px 5px 0 var(--ink); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .ticker-track { animation: none; }
+    .ticker { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">$ROTTER</header>
+
+<main>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <h1>People want a 100x. Nobody can hold for 10 minutes.</h1>
+        <p class="lede">Rotter is the brainrot brain behind the coin. One more trade, one more chart, zero attention span.</p>
+      </div>
+
+      <div class="mascot" id="mascot">
+        <!-- THE ROTTER: a brainrot brain. Built in, no image file needed. -->
+        <svg viewBox="0 0 300 300" role="img" aria-label="Rotter, a brainrot brain with spiral eyes, drooling">
+          <ellipse cx="150" cy="284" rx="86" ry="9" fill="rgba(0,0,0,0.3)"/>
+          <!-- brain outline (stroked blobs) -->
+          <g fill="#FF8FC7" stroke="#14103A" stroke-width="10">
+            <circle cx="105" cy="100" r="48"/>
+            <circle cx="195" cy="100" r="48"/>
+            <circle cx="72" cy="155" r="42"/>
+            <circle cx="228" cy="155" r="42"/>
+            <circle cx="108" cy="204" r="44"/>
+            <circle cx="192" cy="204" r="44"/>
+            <circle cx="150" cy="150" r="64"/>
+          </g>
+          <!-- brain fill (covers inner strokes) -->
+          <g fill="#FF8FC7">
+            <circle cx="105" cy="100" r="48"/>
+            <circle cx="195" cy="100" r="48"/>
+            <circle cx="72" cy="155" r="42"/>
+            <circle cx="228" cy="155" r="42"/>
+            <circle cx="108" cy="204" r="44"/>
+            <circle cx="192" cy="204" r="44"/>
+            <circle cx="150" cy="150" r="64"/>
+          </g>
+          <!-- rot patches -->
+          <g fill="#9BE564" opacity="0.85">
+            <circle cx="66" cy="136" r="13"/>
+            <circle cx="73" cy="148" r="7"/>
+            <circle cx="232" cy="190" r="11"/>
+            <circle cx="214" cy="84" r="8"/>
+          </g>
+          <!-- wrinkles -->
+          <g fill="none" stroke="#D4558F" stroke-width="6" stroke-linecap="round">
+            <path d="M150 58 Q142 78 150 100"/>
+            <path d="M78 88 q16 -16 32 0"/>
+            <path d="M188 78 q16 -16 32 0"/>
+            <path d="M48 168 q12 -14 26 -4"/>
+            <path d="M232 118 q14 -12 26 4"/>
+            <path d="M88 226 q16 -12 30 0"/>
+            <path d="M176 232 q16 -12 30 0"/>
+          </g>
+          <!-- spiral eyes -->
+          <circle cx="116" cy="142" r="26" fill="#fff" stroke="#14103A" stroke-width="6"/>
+          <circle cx="184" cy="142" r="26" fill="#fff" stroke="#14103A" stroke-width="6"/>
+          <g fill="none" stroke="#14103A" stroke-width="3.5" stroke-linecap="round">
+            <path d="M116 138 a4 4 0 0 1 8 0 a8 8 0 0 1 -16 0 a12 12 0 0 1 24 0 a16 16 0 0 1 -32 0 a20 20 0 0 1 40 0"/>
+            <path d="M184 138 a4 4 0 0 1 8 0 a8 8 0 0 1 -16 0 a12 12 0 0 1 24 0 a16 16 0 0 1 -32 0 a20 20 0 0 1 40 0"/>
+          </g>
+          <!-- mouth, tongue, drool -->
+          <path d="M116 196 Q150 246 184 196 Z" fill="#14103A" stroke="#14103A" stroke-width="5" stroke-linejoin="round"/>
+          <path d="M136 214 Q150 240 164 214 Z" fill="#FF5C7A"/>
+          <path d="M178 206 q10 16 0 30 q-10 -14 0 -30 Z" fill="#7FD6FF" stroke="#14103A" stroke-width="3"/>
+        </svg>
+      </div>
+    </section>
+  </div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <div class="wrap">
+    <section class="timer" aria-labelledby="timer-title">
+      <h2 id="timer-title">The 10 minute hold test</h2>
+      <p>Hold. Don't sell. Don't open another tab. We'll wait.</p>
+      <div class="clock" id="clock" aria-live="off">0:00</div>
+      <div class="verdict" id="verdict" aria-live="polite">Press hold to begin.</div>
+      <div class="row">
+        <button id="hold">Hold</button>
+        <button id="sell" class="sell" disabled>Sell</button>
+      </div>
+      <div class="best" id="best"></div>
+    </section>
+
+    <section>
+      <h3>Find Rotter</h3>
+      <div class="links" id="links"></div>
+    </section>
+
+    <section class="ca" id="ca">
+      <h3>Contract address</h3>
+      <code id="ca-text"></code>
+      <button id="copy" hidden>Copy address</button>
+      <small id="ca-note"></small>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    Not financial advice. Memecoins are volatile and can go to zero. Nothing on this page promises returns. Only trust the contract address shown here.
+  </div>
+</footer>
+
+<script>
+/* ==========================================================
+   EDIT ONLY THIS BLOCK. Leave a value empty ("") to hide it.
+   ========================================================== */
+const CONFIG = {
+  tiktok:   "https://www.tiktok.com/@rottercoin",
+  x:        "https://x.com/Rottercoin",
+  telegram: "",   // e.g. "https://t.me/yourgroup"
+  chart:    "",   // e.g. a Dexscreener link, only after launch
+  ca:       "",   // contract address, only after launch
+  mascotImage: "" // optional: your own mascot image, e.g. "mascot.png". Empty = built-in brain
+};
+/* ========================================================== */
+
+// Ticker
+const phrases = ["bought the top", "sold the bottom", "one more trade", "rugged again", "just 10 more minutes", "it was going to 100x", "chart goes brrr", "touch grass later"];
+const tickerEl = document.getElementById("ticker");
+const unit = phrases.map(p => "<span>" + p + "</span>").join("");
+tickerEl.innerHTML = unit + unit;
+
+// Links
+const linkDefs = [["TikTok", CONFIG.tiktok], ["X", CONFIG.x], ["Telegram", CONFIG.telegram], ["Chart", CONFIG.chart]];
+const linksEl = document.getElementById("links");
+linkDefs.forEach(([label, url]) => {
+  if (!url) return;
+  const a = document.createElement("a");
+  a.href = url; a.textContent = label; a.target = "_blank"; a.rel = "noopener noreferrer";
+  linksEl.appendChild(a);
+});
+if (!linksEl.children.length) linksEl.innerHTML = "<span>Links coming soon.</span>";
+
+// Optional custom mascot image
+if (CONFIG.mascotImage) {
+  const m = document.getElementById("mascot");
+  m.innerHTML = "";
+  const img = document.createElement("img");
+  img.src = CONFIG.mascotImage; img.alt = "Rotter mascot";
+  m.appendChild(img);
+}
+
+// Contract address
+const caText = document.getElementById("ca-text");
+const copyBtn = document.getElementById("copy");
+const caNote = document.getElementById("ca-note");
+if (CONFIG.ca) {
+  caText.textContent = CONFIG.ca;
+  copyBtn.hidden = false;
+  caNote.textContent = "This is the only official address. Anything else is fake.";
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(CONFIG.ca).then(() => {
+      copyBtn.textContent = "Copied";
+      setTimeout(() => copyBtn.textContent = "Copy address", 1500);
+    }).catch(() => {});
+  };
+} else {
+  caText.textContent = "Not launched yet.";
+  caNote.textContent = "If someone shows you an address before it appears here, it's a scam.";
+}
+
+// Hold timer
+const clock = document.getElementById("clock");
+const verdict = document.getElementById("verdict");
+const holdBtn = document.getElementById("hold");
+const sellBtn = document.getElementById("sell");
+const bestEl = document.getElementById("best");
+const LIMIT = 600; // 10 minutes
+let start = 0, tick = null, best = 0;
+
+try { best = parseInt(localStorage.getItem("rotterBest") || "0", 10) || 0; } catch (e) {}
+
+const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+const showBest = () => { bestEl.textContent = best ? "Your best hold: " + fmt(best) : ""; };
+showBest();
+
+function roast(s) {
+  if (s < 10) return "Under 10 seconds. That's not selling, that's a reflex.";
+  if (s < 60) return "Less than a minute. A TikTok loaded and it was over.";
+  if (s < 180) return "A few minutes. Respectable for a trader. Still weak.";
+  if (s < 600) return "Almost there. Your finger hurt more than the chart did.";
+  return "10 minutes. Impossible. Check if you're okay.";
+}
+
+function stop(sold) {
+  clearInterval(tick); tick = null;
+  const s = Math.min(LIMIT, Math.floor((Date.now() - start) / 1000));
+  clock.textContent = fmt(s);
+  if (s > best) {
+    best = s;
+    try { localStorage.setItem("rotterBest", String(best)); } catch (e) {}
+  }
+  verdict.textContent = sold ? "Sold at " + fmt(s) + ". " + roast(s) : roast(LIMIT);
+  holdBtn.disabled = false; holdBtn.textContent = "Hold again";
+  sellBtn.disabled = true;
+  showBest();
+}
+
+holdBtn.onclick = () => {
+  start = Date.now();
+  clock.textContent = "0:00";
+  verdict.textContent = "Holding. Don't touch anything.";
+  holdBtn.disabled = true; sellBtn.disabled = false;
+  tick = setInterval(() => {
+    const s = Math.floor((Date.now() - start) / 1000);
+    clock.textContent = fmt(s);
+    if (s >= LIMIT) stop(false);
+  }, 250);
+};
+sellBtn.onclick = () => stop(true);
+</script>
+</body>
+</html>
